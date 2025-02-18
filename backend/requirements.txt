@@ -1,9 +1,9 @@
 fastapi
 uvicorn
-sqlalchemy[asyncio]
+sqlalchemy[asyncio]>=2.0
 asyncpg
 jinja2
 passlib[bcrypt]
-python-dotenv 
+python-dotenv
 pydantic
 fastapi-mail
