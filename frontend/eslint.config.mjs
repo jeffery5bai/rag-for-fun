@@ -5,6 +5,8 @@ import pluginReact from "eslint-plugin-react";
 import pluginJsxA11y from "eslint-plugin-jsx-a11y";
 import pluginImport from "eslint-plugin-import";
 import pluginReactHooks from "eslint-plugin-react-hooks";
+import airbnb from 'eslint-config-airbnb';
+import airbnbTypescript from 'eslint-config-airbnb-typescript';
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
@@ -63,5 +65,7 @@ export default [
   ...tseslint.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked,
   pluginReact.configs.recommended,
-  pluginJsxA11y.configs.recommended
+  pluginJsxA11y.configs.recommended,
+  airbnb,
+  airbnbTypescript
 ];
