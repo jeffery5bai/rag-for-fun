@@ -7,7 +7,7 @@ from app.services.mail import send_email
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from backend.app.schemas.UserAPISchema import SendEmailRequest, SendEmailResponse
+from app.schemas.UserAPISchema import SendEmailRequest, SendEmailResponse
 
 router = APIRouter(prefix="/api/auth", tags=["User"])
 
