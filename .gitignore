@@ -1,4 +1,8 @@
 ## backend
+.DS_Store
+*.pyc# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# 以下規則只針對 frontend 目錄 (繼承自 frontend/.gitignore)
+# The following rules apply to the frontend directory (inherited from frontend/.gitignore)
 
 ## frontend
 # dependencies
@@ -22,22 +26,16 @@
 /frontend/build
 
 # misc
-.DS_Store
 /frontend/.DS_Store
 /frontend/*.pem
 
 # debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
 /frontend/npm-debug.log*
 /frontend/yarn-debug.log*
 /frontend/yarn-error.log*
 /frontend/.pnpm-debug.log*
 
 # env files (can opt-in for committing if needed)
-.env*
 /frontend/.env*
 
 # vercel
@@ -45,13 +43,4 @@ yarn-error.log*
 
 # typescript
 /frontend/*.tsbuildinfo
-/frontend/next-env.d.ts
-
-# IDE
-.idea/
-.vscode/
-*.swp
-*.swo
-
-# System Files
-Thumbs.db 
+/frontend/next-env.d.ts 
