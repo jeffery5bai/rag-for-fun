@@ -1,6 +1,7 @@
 ## backend
 .DS_Store
-*.pyc# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+*.pyc
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 # 以下規則只針對 frontend 目錄 (繼承自 frontend/.gitignore)
 # The following rules apply to the frontend directory (inherited from frontend/.gitignore)
 
