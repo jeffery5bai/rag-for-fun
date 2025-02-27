@@ -3,15 +3,20 @@ from datetime import datetime, timedelta
 
 from app.core.database import get_db
 from app.models.user_model import User, VerificationCode
-from app.schemas.user_schema import SendEmailRequest, SendEmailResponse
 from app.services.mail import send_email
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-router = APIRouter(prefix="/api/v1/user", tags=["User"])
+from app.schemas.UserAPISchema import SendEmailRequest, SendEmailResponse
+
+router = APIRouter(prefix="/api/auth", tags=["User"])
+
+"""
+Registered API
+- Send verification email: f"{BASE_URL}{PREFIX}/send_email"
+"""
 
 
-# Sign-on API
 @router.post("/send_email/", response_model=SendEmailResponse)
 async def send_verification_email(request: SendEmailRequest, db: AsyncSession = Depends(get_db)):
     user_email = request.email

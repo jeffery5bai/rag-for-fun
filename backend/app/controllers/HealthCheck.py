@@ -6,7 +6,7 @@ from sqlalchemy import text
 from app.core.database import get_db
 from sqlalchemy.exc import OperationalError
 
-router = APIRouter(prefix="/api/v1/test")
+router = APIRouter(prefix="/api/test")
 
 @router.get("/db/")
 async def health_check(db: AsyncSession = Depends(get_db)):
