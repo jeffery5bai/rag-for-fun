@@ -29,6 +29,7 @@ async def send_verification_email(request: SendEmailRequest, db: AsyncSession = 
     if user:
         return SendEmailResponse(code=1, msg="This email has been registered")
 
+
     # Generate verification code
     v_code = str(random.randint(100000, 999999)).zfill(6)
     expired_time = datetime.now() + timedelta(hours=1)
@@ -40,6 +41,7 @@ async def send_verification_email(request: SendEmailRequest, db: AsyncSession = 
         db.add(new_record)
 
     await db.commit()
+
 
     # Send email
     await send_email(request.email, v_code, expired_time)
@@ -75,7 +77,6 @@ async def verify_and_register(request: UserRegisterRequest, db: AsyncSession = D
     await db.commit()
 
     return UserRegisterResponse(code=0, msg=f"Welcome {user_name}! Your new account has been created.")
-
 
 # # New API to be implemented
 # @router.post("/<url_to_be_used>/", response_model=<pre-defined_response_schema>)

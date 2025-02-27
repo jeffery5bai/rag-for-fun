@@ -1,0 +1,9 @@
+*.md
+*.mdx
+*.js
+*.jsx
+*.ts
+*.tsx
+*.mjs
+*.mts
+*.json
