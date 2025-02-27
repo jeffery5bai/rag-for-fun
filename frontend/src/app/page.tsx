@@ -11,7 +11,7 @@ export default function Home() {
       <div className="flex flex-col items-center justify-center gap-8">
         <h2 className="text-4xl font-bold">Buckle Up!</h2>
         <p className="text-2xl">The ride is about to start!</p>
-        <Link href="/register" className="bg-orange-500 text-white px-4 py-2 rounded-md">Join Waitlist</Link>
+        <Link href="/auth" className="bg-orange-500 text-white px-4 py-2 rounded-md">Join Waitlist</Link>
       </div>
     </div>
   );
