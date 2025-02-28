@@ -35,7 +35,7 @@ export async function POST(request: Request) {
     
     // 使用 axiosClient 呼叫實際後端 API
     try {
-      const response = await axiosClient.post('/auth/login', userData);
+      const response = await axiosClient.post('/auth/send_email', userData);
       console.log('API response:', response);
       
       return NextResponse.json(
