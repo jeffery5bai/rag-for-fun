@@ -23,7 +23,7 @@ export async function POST(request: Request) {
     const userData = {
       name,
       email,
-      pwd: hashedPassword,
+      hash_password: hashedPassword,
       verification_code: otpCode
     };
 
