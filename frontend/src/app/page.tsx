@@ -47,7 +47,7 @@ export default function Home() {
                 href="/auth?tab=login" 
                 className="inline-flex items-center justify-center h-10 px-6 py-2 bg-primary text-primary-foreground font-medium rounded-md shadow-sm hover:opacity-90 transition-colors text-center"
               >
-                搶先體驗
+                立即登入 (Alpha 測試版)
               </Link>
               <Link 
                 href="/auth" 
