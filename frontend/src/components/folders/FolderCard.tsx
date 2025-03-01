@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { Folder } from "@/types/folders";
+import type { Folder } from "@/types/folders.interface";
 
 // 在没有指定颜色时使用的默认颜色列表
 const DEFAULT_COLORS = [
