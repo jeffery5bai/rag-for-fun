@@ -29,6 +29,17 @@
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
+  
+  /* 添加功能色變數 */
+  --success: oklch(0.576 0.175 142.495);
+  --success-foreground: oklch(0.985 0 0);
+  --error: oklch(0.671 0.2 27.142);
+  --error-foreground: oklch(0.985 0 0);
+  --warning: oklch(0.75 0.168 68.384);
+  --warning-foreground: oklch(0.145 0 0);
+  --info: oklch(0.604 0.188 231.56);
+  --info-foreground: oklch(0.985 0 0);
+  
   --radius: 0.625rem;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
@@ -65,6 +76,17 @@
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
+  
+  /* 添加暗色模式功能色變數 */
+  --success: oklch(0.48 0.155 142.495);
+  --success-foreground: oklch(0.145 0 0);
+  --error: oklch(0.568 0.18 27.142);
+  --error-foreground: oklch(0.145 0 0);
+  --warning: oklch(0.65 0.15 68.384);
+  --warning-foreground: oklch(0.145 0 0);
+  --info: oklch(0.5 0.17 231.56);
+  --info-foreground: oklch(0.145 0 0);
+  
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
   --sidebar-primary: oklch(0.488 0.243 264.376);
@@ -100,6 +122,17 @@
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
+  
+  /* 添加功能色對應 */
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-error: var(--error);
+  --color-error-foreground: var(--error-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
