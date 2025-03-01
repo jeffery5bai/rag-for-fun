@@ -1,26 +1,28 @@
-from sqlalchemy import Column, String, TIMESTAMP, DateTime
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import declarative_base
-from sqlalchemy.future import select
 import uuid
 
+from sqlalchemy import TIMESTAMP, Column, DateTime, String
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
+from sqlalchemy.orm import declarative_base
+
 Base = declarative_base()
+
 
 class User(Base):
     __tablename__ = "users"
 
     user_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     email = Column(String(255), unique=True, nullable=False)
-    password_hash = Column(String(255), nullable=True)  # Nullable for SSO users
+    hashed_password = Column(String(255), nullable=True)  # Nullable for SSO users
     user_name = Column(String(255), nullable=False)
     created_at = Column(TIMESTAMP, server_default="CURRENT_TIMESTAMP")
     updated_at = Column(TIMESTAMP, server_default="CURRENT_TIMESTAMP", onupdate="CURRENT_TIMESTAMP")
     auth_provider = Column(String(50), nullable=False, default="local")
 
-    def __init__(self, email, password_hash, user_name, auth_provider=None):
+    def __init__(self, email, hashed_password, user_name, auth_provider=None):
         self.email = email
-        self.password_hash = password_hash
+        self.hashed_password = hashed_password
         self.user_name = user_name
 
         if auth_provider:
@@ -31,6 +33,7 @@ class User(Base):
         # Fetch a record asynchronously
         result = await db.execute(select(User).filter_by(email=email))
         return result.scalar_one_or_none()
+
 
 class VerificationCode(Base):
     __tablename__ = "verification_code"

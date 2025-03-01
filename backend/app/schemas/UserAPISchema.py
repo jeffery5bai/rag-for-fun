@@ -1,4 +1,5 @@
 from typing import Optional
+
 from pydantic import BaseModel, EmailStr
 
 
@@ -35,4 +36,4 @@ class UserLoginResponse(BaseModel):
     code: int
     msg: str
     name: Optional[str] = None
-    # jwt_token: str
+    jwt_token: Optional[str] = None

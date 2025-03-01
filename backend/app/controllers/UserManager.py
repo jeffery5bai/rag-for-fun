@@ -1,6 +1,7 @@
 import random
 from datetime import datetime, timedelta
 
+from app.core.config import ACCESS_TOKEN_EXPIRE_MINUTES
 from app.core.database import get_db
 from app.models.user_model import User, VerificationCode
 from app.schemas.UserAPISchema import (
@@ -11,13 +12,13 @@ from app.schemas.UserAPISchema import (
     UserRegisterRequest,
     UserRegisterResponse,
 )
+from app.services.auth import create_access_token, get_current_user
 from app.services.mail import send_email
-from app.services.auth import get_current_user
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter(prefix="/api/auth", tags=["User"])
-# jwt_router = APIRouter(prefix="/api/auth", tags=["User"], dependencies=[Depends(get_current_user)])
+jwt_router = APIRouter(prefix="/api/auth", tags=["User"], dependencies=[Depends(get_current_user)])
 
 """
 Registered API
@@ -35,7 +36,6 @@ async def send_verification_email(request: SendEmailRequest, db: AsyncSession = 
     if user:
         return SendEmailResponse(code=1, msg="This email has been registered")
 
-
     # Generate verification code
     v_code = str(random.randint(100000, 999999)).zfill(6)
     expired_time = datetime.now() + timedelta(hours=1)
@@ -47,7 +47,6 @@ async def send_verification_email(request: SendEmailRequest, db: AsyncSession = 
         db.add(new_record)
 
     await db.commit()
-
 
     # Send email
     await send_email(request.email, v_code, expired_time)
@@ -94,11 +93,16 @@ async def login(request: UserLoginRequest, db: AsyncSession = Depends(get_db)):
     if user is None:
         return UserRegisterResponse(code=1, msg="User email doesn't exist. Sign-up your new account?.")
 
-    if user_password != user.password_hash:
+    if user_password != user.hashed_password:
         return UserRegisterResponse(code=2, msg="Wrong password! Please try again.")
 
     # Success
-    return UserRegisterResponse(code=0, msg=f"Welcome {user.user_name}!", name=user.user_name)
+    jwt_token = create_access_token(
+        data={"sub": user.user_name}, expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    )
+    return UserRegisterResponse(
+        code=0, msg=f"Welcome {user.user_name}!", name=user.user_name, jwt_token=jwt_token
+    )
 
 
 # # New API to be implemented
