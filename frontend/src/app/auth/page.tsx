@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -82,9 +84,12 @@ type RegisterFormValues = z.infer<typeof registerSchema>;
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function Auth() {
+  const searchParams = useSearchParams();
+  const tabParam = searchParams.get("tab");
+  
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const [activeTab, setActiveTab] = useState("register");
+  const [activeTab, setActiveTab] = useState(tabParam === "login" ? "login" : "register");
   const [showOTP, setShowOTP] = useState(false);
   const [otpValue, setOtpValue] = useState('');
   const [registrationData, setRegistrationData] = useState<RegisterFormValues | null>(null);
@@ -278,18 +283,35 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-b from-orange-500 via-black to-black from-0% via-50% to-100%">
-      <div className="w-full max-w-md bg-black/50 backdrop-blur-md p-6 rounded-lg shadow-xl border border-orange-500/20">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-b from-primary-50 to-background">
+      <div className="w-full max-w-md bg-background/90 backdrop-blur-md p-8 rounded-lg shadow-md border border-border transition-all duration-500 ease-in-out">
+        <div className="mb-8 flex justify-center">
+          <Link href="/" className="flex items-center group">
+            <div className="relative overflow-hidden rounded-md shadow-sm">
+              <Image 
+                src="/rag-for-fun-logo.png" 
+                alt="NotebookAI Logo" 
+                width={40} 
+                height={40}
+                className="transition-transform duration-300 group-hover:scale-105" 
+              />
+            </div>
+            <h1 className="ml-3 text-xl font-bold text-foreground group-hover:text-primary transition-colors">
+              NotebookAI
+            </h1>
+          </Link>
+        </div>
+        
         {showOTP ? (
           // OTP 驗證畫面
-          <div className="space-y-6">
-            <h1 className="text-3xl font-bold text-center mb-2 text-white">驗證您的電子郵件</h1>
-            <p className="text-white/80 text-center mb-6">
+          <div className="space-y-6 animate-in fade-in-50 duration-300">
+            <h1 className="text-2xl font-bold text-center mb-2 text-foreground">驗證您的電子郵件</h1>
+            <p className="text-muted-foreground text-center mb-6">
               我們已發送一個 6 位數驗證碼至 {registrationData?.email}
             </p>
             
             {error && (
-              <div className="text-red-500 text-center mb-4">
+              <div className="text-destructive text-center mb-4 p-2 rounded-md bg-destructive/10">
                 {error}
               </div>
             )}
@@ -299,7 +321,7 @@ export default function Auth() {
                 maxLength={6} 
                 value={otpValue} 
                 onChange={handleOTPChange}
-                containerClassName="justify-center text-white"
+                containerClassName="justify-center"
                 disabled={isLoading}
               >
                 <InputOTPGroup>
@@ -316,14 +338,14 @@ export default function Auth() {
               </InputOTP>
               
               {isLoading && (
-                <div className="text-white text-center">處理中...</div>
+                <div className="text-muted-foreground text-center">處理中...</div>
               )}
               
-              <div className="text-sm text-white/70 text-center">
+              <div className="text-sm text-muted-foreground text-center">
                 沒有收到驗證碼？ 
                 <button 
                   onClick={() => handleVerifyEmail(registrationData?.email || '')} 
-                  className="text-orange-300 hover:text-orange-400 ml-1"
+                  className="text-primary hover:text-primary/90 ml-1 font-medium"
                   disabled={isLoading}
                 >
                   重新發送
@@ -333,7 +355,8 @@ export default function Auth() {
             <Button
               onClick={handleCompleteRegistration}
               disabled={otpValue.length !== 6 || isLoading}
-              className="mt-4 w-full bg-orange-500 hover:bg-orange-600 text-white disabled:bg-gray-400"
+              className="mt-4 w-full"
+              variant="default"
             >
               {isLoading ? '處理中...' : '確認驗證碼'}
             </Button>
@@ -341,172 +364,215 @@ export default function Auth() {
         ) : (
           // 註冊/登入畫面
           <>
-            <h1 className="text-3xl font-bold text-center mb-8 text-white">歡迎</h1>
+            <h1 className="text-2xl font-bold text-center mb-6 text-foreground">
+              {activeTab === "register" ? "歡迎加入 NotebookAI" : "歡迎回到 NotebookAI"}
+            </h1>
             
             {error && (
-              <div className="text-red-500 text-center mb-4">
+              <div className="text-destructive text-center mb-4 p-2 rounded-md bg-destructive/10">
                 {error}
               </div>
             )}
 
-            <Tabs defaultValue="register" value={activeTab} onValueChange={handleTabChange}>
-              <TabsList className="w-full mb-6">
-                <TabsTrigger value="register" className="flex-1">註冊</TabsTrigger>
-                <TabsTrigger value="login" className="flex-1">登入</TabsTrigger>
+            <Tabs defaultValue={activeTab} value={activeTab} onValueChange={handleTabChange} className="w-full">
+              <TabsList className="w-full mb-6 grid grid-cols-2">
+                <TabsTrigger value="register">註冊</TabsTrigger>
+                <TabsTrigger value="login">登入</TabsTrigger>
               </TabsList>
               
-              <TabsContent value="register">
-                <Form {...registerForm}>
-                  <form onSubmit={registerForm.handleSubmit(handleRegister)} className="space-y-5" noValidate>
-                    <FormField
-                      control={registerForm.control}
-                      name="name"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-white">姓名</FormLabel>
-                          <FormControl>
-                            <Input 
-                              {...field} 
-                              className="w-full text-black bg-white/90"
-                            />
-                          </FormControl>
-                          <FormMessage className="text-red-400" />
-                        </FormItem>
-                      )}
-                    />
+              <div 
+                className="relative overflow-hidden transition-[height] duration-500 ease-in-out"
+                style={{ 
+                  height: activeTab === "register" ? "410px" : "280px" 
+                }}
+              >
+                <TabsContent 
+                  value="register"
+                  className="transition-all data-[state=active]:animate-in data-[state=active]:fade-in data-[state=active]:slide-in-from-left-3 data-[state=inactive]:animate-out data-[state=inactive]:fade-out data-[state=inactive]:slide-out-to-right-3 duration-300 ease-in-out"
+                >
+                  <Form {...registerForm}>
+                    <form onSubmit={registerForm.handleSubmit(handleRegister)} className="space-y-4" noValidate>
+                      <FormField
+                        control={registerForm.control}
+                        name="name"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>姓名</FormLabel>
+                            <FormControl>
+                              <Input 
+                                {...field} 
+                                className="w-full"
+                                placeholder="請輸入您的姓名"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-                    <FormField
-                      control={registerForm.control}
-                      name="email"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-white">電子郵件</FormLabel>
-                          <FormControl>
-                            <Input 
-                              {...field} 
-                              type="email"
-                              className="w-full text-black bg-white/90"
-                            />
-                          </FormControl>
-                          <FormMessage className="text-red-400" />
-                        </FormItem>
-                      )}
-                    />
+                      <FormField
+                        control={registerForm.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>電子郵件</FormLabel>
+                            <FormControl>
+                              <Input 
+                                {...field} 
+                                type="email"
+                                className="w-full"
+                                placeholder="your@email.com"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-                    <FormField
-                      control={registerForm.control}
-                      name="password"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-white">密碼</FormLabel>
-                          <FormControl>
-                            <Input 
-                              {...field} 
-                              type="password"
-                              className="w-full text-black bg-white/90"
-                            />
-                          </FormControl>
-                          <FormMessage className="text-red-400" />
-                        </FormItem>
-                      )}
-                    />
+                      <FormField
+                        control={registerForm.control}
+                        name="password"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>密碼</FormLabel>
+                            <FormControl>
+                              <Input 
+                                {...field} 
+                                type="password"
+                                className="w-full"
+                                placeholder="至少8個字元"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-                    <FormField
-                      control={registerForm.control}
-                      name="confirmPassword"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-white">確認密碼</FormLabel>
-                          <FormControl>
-                            <Input 
-                              {...field} 
-                              type="password"
-                              className="w-full text-black bg-white/90"
-                              onBlur={() => {
-                                // 當用戶離開此欄位時觸發確認密碼的驗證
-                                if (field.value && field.value !== registerForm.getValues('password')) {
-                                  registerForm.setError('confirmPassword', {
-                                    type: 'manual',
-                                    message: '密碼不符合'
-                                  });
-                                }
-                              }}
-                            />
-                          </FormControl>
-                          <FormMessage className="text-red-400" />
-                        </FormItem>
-                      )}
-                    />
+                      <FormField
+                        control={registerForm.control}
+                        name="confirmPassword"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>確認密碼</FormLabel>
+                            <FormControl>
+                              <Input 
+                                {...field} 
+                                type="password"
+                                className="w-full"
+                                placeholder="再次輸入密碼"
+                                onBlur={() => {
+                                  if (field.value && field.value !== registerForm.getValues('password')) {
+                                    registerForm.setError('confirmPassword', {
+                                      type: 'manual',
+                                      message: '密碼不符合'
+                                    });
+                                  }
+                                }}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-                    <Button
-                      type="submit"
-                      disabled={
-                        isLoading || 
-                        (!registerForm.formState.isValid || Object.keys(registerForm.formState.errors).length > 0)
-                      }
-                      className="w-full bg-orange-500 hover:bg-orange-600 text-white disabled:bg-gray-400"
-                    >
-                      {isLoading ? '提交中...' : '註冊'}
-                    </Button>
-                  </form>
-                </Form>
-              </TabsContent>
-              
-              <TabsContent value="login">
-                <Form {...loginForm}>
-                  <form onSubmit={loginForm.handleSubmit(handleLogin)} className="space-y-5" noValidate>
-                    <FormField
-                      control={loginForm.control}
-                      name="email"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-white">電子郵件</FormLabel>
-                          <FormControl>
-                            <Input 
-                              {...field} 
-                              type="email"
-                              className="w-full text-black bg-white/90"
-                            />
-                          </FormControl>
-                          <FormMessage className="text-red-400" />
-                        </FormItem>
-                      )}
-                    />
+                      <Button
+                        type="submit"
+                        disabled={
+                          isLoading || 
+                          (!registerForm.formState.isValid || Object.keys(registerForm.formState.errors).length > 0)
+                        }
+                        className="w-full mt-6"
+                        variant="default"
+                      >
+                        {isLoading ? '提交中...' : '註冊'}
+                      </Button>
+                    </form>
+                  </Form>
+                </TabsContent>
+                
+                <TabsContent 
+                  value="login"
+                  className="transition-all data-[state=active]:animate-in data-[state=active]:fade-in data-[state=active]:slide-in-from-right-3 data-[state=inactive]:animate-out data-[state=inactive]:fade-out data-[state=inactive]:slide-out-to-left-3 duration-300 ease-in-out"
+                >
+                  <Form {...loginForm}>
+                    <form onSubmit={loginForm.handleSubmit(handleLogin)} className="space-y-4" noValidate>
+                      <FormField
+                        control={loginForm.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>電子郵件</FormLabel>
+                            <FormControl>
+                              <Input 
+                                {...field} 
+                                type="email"
+                                className="w-full"
+                                placeholder="your@email.com"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-                    <FormField
-                      control={loginForm.control}
-                      name="password"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-white">密碼</FormLabel>
-                          <FormControl>
-                            <Input 
-                              {...field} 
-                              type="password"
-                              className="w-full text-black bg-white/90"
-                            />
-                          </FormControl>
-                          <FormMessage className="text-red-400" />
-                        </FormItem>
-                      )}
-                    />
+                      <FormField
+                        control={loginForm.control}
+                        name="password"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>密碼</FormLabel>
+                            <FormControl>
+                              <Input 
+                                {...field} 
+                                type="password"
+                                className="w-full"
+                                placeholder="請輸入密碼"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-                    <Button
-                      type="submit"
-                      disabled={isLoading || !loginForm.formState.isValid || Object.keys(loginForm.formState.errors).length > 0}
-                      className="w-full bg-orange-500 hover:bg-orange-600 text-white disabled:bg-gray-400"
-                    >
-                      {isLoading ? '登入中...' : '登入'}
-                    </Button>
-                  </form>
-                </Form>
-              </TabsContent>
+                      <div className="flex justify-end">
+                        <Link 
+                          href="/forgot-password" 
+                          className="text-sm text-primary hover:text-primary/90 font-medium"
+                        >
+                          忘記密碼？
+                        </Link>
+                      </div>
+
+                      <Button
+                        type="submit"
+                        disabled={isLoading || !loginForm.formState.isValid || Object.keys(loginForm.formState.errors).length > 0}
+                        className="w-full mt-6"
+                        variant="default"
+                      >
+                        {isLoading ? '登入中...' : '登入'}
+                      </Button>
+                    </form>
+                  </Form>
+                </TabsContent>
+              </div>
             </Tabs>
           </>
         )}
 
         <div className="mt-6 text-center">
-          <Link href="/" className="text-orange-300 hover:text-orange-400">
+          <Link 
+            href="/" 
+            className="text-primary hover:text-primary/90 font-medium inline-flex items-center"
+          >
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              className="h-4 w-4 mr-1" 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
             返回首頁
           </Link>
         </div>
