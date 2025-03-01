@@ -12,13 +12,16 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-DATABASE_URL = os.getenv("DATABASE_URL")
-SMTP_HOST = os.getenv("SMTP_HOST")
-SMTP_PORT = os.getenv("SMTP_PORT")
-SMTP_USER = os.getenv("SMTP_USER")
-SMTP_EMAIL = os.getenv("SMTP_EMAIL")
-SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")
-SENDER_EMAIL = os.getenv("SENDER_EMAIL")
-SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
-FRONTEND_SERVER_URL = os.getenv("FRONTEND_SERVER_URL")
-BACKEND_SERVER_URL = os.getenv("BACKEND_SERVER_URL")
+JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "")
+JWT_ALGORITHM = os.getenv("JWT_ALGORITHM", "")
+ACCESS_TOKEN_EXPIRE_MINUTES = 60
+
+DATABASE_URL = os.getenv("DATABASE_URL", "")
+
+SMTP_HOST = os.getenv("SMTP_HOST", "")
+SMTP_PORT = os.getenv("SMTP_PORT", "")
+SMTP_EMAIL = os.getenv("SMTP_EMAIL", "")
+SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "")
+
+FRONTEND_SERVER_URL = os.getenv("FRONTEND_SERVER_URL", "")
+BACKEND_SERVER_URL = os.getenv("BACKEND_SERVER_URL", "")
