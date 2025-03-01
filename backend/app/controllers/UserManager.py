@@ -6,6 +6,8 @@ from app.models.user_model import User, VerificationCode
 from app.schemas.UserAPISchema import (
     SendEmailRequest,
     SendEmailResponse,
+    UserLoginRequest,
+    UserLoginResponse,
     UserRegisterRequest,
     UserRegisterResponse,
 )
@@ -18,6 +20,8 @@ router = APIRouter(prefix="/api/auth", tags=["User"])
 """
 Registered API
 - Send verification email: f"{BASE_URL}{PREFIX}/send_email"
+- Register new user: f"{BASE_URL}{PREFIX}/register"
+- Login user: f"{BASE_URL}{PREFIX}/login"
 """
 
 
@@ -58,15 +62,15 @@ async def verify_and_register(request: UserRegisterRequest, db: AsyncSession = D
 
     # Verify the 6-number code
     user = await VerificationCode.get_by_email(db, user_email)
-    if user is None: # if user exists
+    if user is None:  # if user exists
         return UserRegisterResponse(
             code=1, msg="User email doesn't exist. Please get verification code for this account."
         )
 
-    if v_code != user.verification_code: # if the code is correct
+    if v_code != user.verification_code:  # if the code is correct
         return UserRegisterResponse(code=2, msg="Wrong verification code! Please try again.")
 
-    if datetime.now() >= user.expired_time: # if the code is expired
+    if datetime.now() >= user.expired_time:  # if the code is expired
         return UserRegisterResponse(
             code=2, msg="This verification code is expired. Please get another one for this account."
         )
@@ -77,6 +81,23 @@ async def verify_and_register(request: UserRegisterRequest, db: AsyncSession = D
     await db.commit()
 
     return UserRegisterResponse(code=0, msg=f"Welcome {user_name}! Your new account has been created.")
+
+
+@router.post("/login/", response_model=UserLoginResponse)
+async def login(request: UserLoginRequest, db: AsyncSession = Depends(get_db)):
+    user_email = request.email
+    user_password = request.hashed_password
+
+    user = await User.get_by_email(db, user_email)
+    if user is None:
+        return UserRegisterResponse(code=1, msg="User email doesn't exist. Sign-up your new account?.")
+
+    if user_password != user.password_hash:
+        return UserRegisterResponse(code=2, msg="Wrong password! Please try again.")
+
+    # Success
+    return UserRegisterResponse(code=0, msg=f"Welcome {user.user_name}!", name=user.user_name)
+
 
 # # New API to be implemented
 # @router.post("/<url_to_be_used>/", response_model=<pre-defined_response_schema>)
