@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -82,9 +83,12 @@ type RegisterFormValues = z.infer<typeof registerSchema>;
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function Auth() {
+  const searchParams = useSearchParams();
+  const tabParam = searchParams.get("tab");
+  
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const [activeTab, setActiveTab] = useState("register");
+  const [activeTab, setActiveTab] = useState(tabParam === "login" ? "login" : "register");
   const [showOTP, setShowOTP] = useState(false);
   const [otpValue, setOtpValue] = useState('');
   const [registrationData, setRegistrationData] = useState<RegisterFormValues | null>(null);
@@ -349,7 +353,7 @@ export default function Auth() {
               </div>
             )}
 
-            <Tabs defaultValue="register" value={activeTab} onValueChange={handleTabChange}>
+            <Tabs defaultValue={activeTab} value={activeTab} onValueChange={handleTabChange}>
               <TabsList className="w-full mb-6">
                 <TabsTrigger value="register" className="flex-1">註冊</TabsTrigger>
                 <TabsTrigger value="login" className="flex-1">登入</TabsTrigger>
