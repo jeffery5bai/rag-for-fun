@@ -12,10 +12,12 @@ from app.schemas.UserAPISchema import (
     UserRegisterResponse,
 )
 from app.services.mail import send_email
+from app.services.auth import get_current_user
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter(prefix="/api/auth", tags=["User"])
+# jwt_router = APIRouter(prefix="/api/auth", tags=["User"], dependencies=[Depends(get_current_user)])
 
 """
 Registered API

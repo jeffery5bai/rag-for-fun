@@ -5,7 +5,7 @@ from pydantic import BaseModel, EmailStr
 from datetime import datetime
 from aiosmtplib import send, SMTP
 from email.message import EmailMessage
-from app.core.config import SMTP_HOST, SMTP_PORT, SMTP_EMAIL, SMTP_PASSWORD, SENDER_EMAIL
+from app.core.config import SMTP_HOST, SMTP_PORT, SMTP_EMAIL, SMTP_PASSWORD
 
 # FastAPI-Mail Configuration
 conf = ConnectionConfig(
