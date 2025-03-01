@@ -23,7 +23,7 @@ export default function Home() {
           </Link>
           
           <Link 
-            href="/auth?tab=login" 
+            href="/auth" 
             className="inline-flex items-center justify-center h-9 px-4 py-2 bg-primary text-primary-foreground text-sm font-medium rounded-md shadow-sm hover:bg-primary/90 transition-colors"
           >
             加入等待名單
@@ -50,7 +50,7 @@ export default function Home() {
                 立即登入 (Alpha 測試版)
               </Link>
               <Link 
-                href="/auth?tab=login" 
+                href="/auth" 
                 className="inline-flex items-center justify-center h-10 px-6 py-2 border border-input bg-background text-foreground font-medium rounded-md shadow-sm hover:bg-muted/50 transition-colors text-center"
               >
                 加入等待名單
@@ -124,7 +124,7 @@ export default function Home() {
             加入 NotebookAI，體驗 AI 驅動的文檔管理的未來。
           </p>
           <Link 
-            href="/auth?tab=login" 
+            href="/auth" 
             className="inline-flex items-center justify-center h-10 px-6 py-2 bg-primary text-primary-foreground font-medium rounded-md shadow-sm hover:bg-primary/90 transition-colors"
           >
             加入等待名單
